@@ -1,0 +1,80 @@
+from rest_framework import serializers
+from imdb_app.models import Movie
+from django.utils.timezone import now
+
+#Serializers define the API representation.
+
+#Validators 
+# def length(value):
+#     if len(value)>100:
+#         raise serializers.ValidationError("Description is too long.")
+#     return value
+
+# class MovieSerializer(serializers.Serializer):
+
+#     id = serializers.IntegerField(read_only=True)
+#     title = serializers.CharField(max_length=200)
+#     #length is a custom validator which is defined out of the class that checks the length of the description field.
+#     description = serializers.CharField(validators=[length])
+#     active = serializers.BooleanField(default=True)
+
+#     def create(self, validated_data):
+#         """ Create and return a new Movie instance, given the validated data. """
+#         return Movie.objects.create(**validated_data)
+    
+#     def update(self, instance, validated_data):
+#         """ Update and return an existing Movie instance, given the validated data. """
+#         instance.title = validated_data.get('title', instance.title)
+#         instance.description = validated_data.get('description', instance.description)
+#         instance.active = validated_data.get('active', instance.active)
+#         instance.save()
+#         return instance
+    
+
+#     #Field level validation
+#     #Field level validation is used to validate the individual fields of the serializer.
+#     #Field level validation is done by defining the validate_<field_name> method in the serializer class.
+#     def validate_title(Self, value):
+#         """ Check that the title is not empty. """
+#         if len(value)<2:
+#             raise serializers.ValidationError("Title is too short.")
+#         return value
+    
+#     #Object level validation
+#     #Object level validation is used to validate the entire object before saving it to the database.
+#     def validate(self, data):
+#         """ Check that the title and description are not the same. """
+#         if data['title'] == data['description']:
+#             raise serializers.ValidationError("Title and description cannot be same.")
+#         return data
+
+    
+    
+#ModelSerializers
+#ModelSerializers automatically create a set of fields based on the model class you have defined.They have inbuilt create and update methods.
+
+class MovieSerializer(serializers.ModelSerializer):
+    #Custom field to calculate the number of days since the movie was added.
+    #This field is not part of the model, but we can add it to the serializer.
+    days_since_added = serializers.SerializerMethodField()
+    class Meta:
+        model = Movie
+        #fields = '__all__'  # or you can specify the fields you want to include, e.g., ['id', 'title', 'description', 'active']
+        fields = ['id', 'title', 'description', 'active', 'days_since_added']
+        #exclude = ['id']  # if you want to exclude certain fields
+    def get_days_since_added(self, obj):
+        return (now() - obj.created_at).days
+    
+
+    #Validations can be added in the same way as field level validation. For example:
+    def validate_title(self, value):
+        """ Check that the title is not empty. """
+        if len(value) < 2:
+            raise serializers.ValidationError("Title is too short.")
+        return value
+
+    def validate(self, data):
+        """ Check that the title and description are not the same. """
+        if data['title'] == data['description']:
+            raise serializers.ValidationError("Title and description cannot be same.")
+        return data

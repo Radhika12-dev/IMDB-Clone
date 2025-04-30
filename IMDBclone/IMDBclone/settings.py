@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'imdb_app',
-    'rest_framework',
+    'imdb_app', # This is the app we created for the project
+    'rest_framework', # This is for Django Rest Framework
+    'rest_framework.authtoken', # This is for token authentication
+    #After addinf 'rest_framework.authtoken' we need to run the command 'python manage.py migrate' to create the token table in the database
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Authentication and Permissions
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated'
+    # ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+        
+    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+

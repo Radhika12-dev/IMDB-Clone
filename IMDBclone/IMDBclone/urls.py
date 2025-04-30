@@ -21,5 +21,9 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('movie/', include('imdb_app.api.urls')),
+    path('watch/', include('imdb_app.api.urls')),
+
+    # This will act as temerory login for the API
+    #This 'api-auth/' is used to login and logout the user and provided by Django Rest Framework
+   
 ]
