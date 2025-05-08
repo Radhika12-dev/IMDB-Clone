@@ -14,5 +14,9 @@ urlpatterns = [
     path('stream/<int:movie_id>/review/', ReviewList.as_view(), name='review_list'),
     path('stream/<int:movie_id>/review-create/', ReviewCreate.as_view(), name='review_create'),
     path('stream/review/<int:pk>/', ReviewDetail.as_view(), name='review_detail'),
+    path('reviews/<str:username>/', UserReview.as_view(), name='user_review_list'),
+    path('reviews_query/',UserReviewQuery.as_view(), name='user_review_query'),
+    path('list2/', WatchListSearch.as_view() , name='movie_list2'),
+    path('list3/', WatchListOrdering.as_view() , name='movie_list3'),
     
 ]   

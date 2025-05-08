@@ -12,6 +12,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     days_since_added = serializers.SerializerMethodField()
     reviews = ReviewSerializer(many=True, read_only=True)
+    platform = serializers.CharField(source='platform.name', read_only=True)
     # This will show the reviews related to the movie in the list
     class Meta:
         model = WatchList

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework', # This is for Django Rest Framework
     'rest_framework.authtoken', # This is for token authentication
     #After addinf 'rest_framework.authtoken' we need to run the command 'python manage.py migrate' to create the token table in the database
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -135,7 +136,40 @@ REST_FRAMEWORK = {
         
     # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
-}
+         'rest_framework.authentication.TokenAuthentication',
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'],
+    
+    # using this setting no one can access the Browsable API, JSON format will be used, we will use this when we deploy to production so that no one can edit.
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    
+    #This is the global pagination that we can set for the entire project.
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 5, # This will limit the number of results per page to 5.
+    # Pagination can only be set to generic views and not to APIView.
 
+
+    #This is the global throttling that we can set for the entire project.
+    # We can also set the throttling for each view separately.
+    # 'DEFUALT_THROTTLE_CLASSES' : [
+    #     'rest_framework.throttling.AnonRateThrottle', # This will limit the number of requests for anonymous users.
+    #     'rest_framework.throttling.UserRateThrottle', # This will limit the number of requests for authenticated users.
+    # ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1/day',
+        'user': '3/day',
+        'review_create': '1/day', # This will limit the number of requests for creating a review to 1/day.
+        'review_list': '10/day', # This will limit the number of requests for listing the reviews to 10/day.
+    }
+
+}
+#We can modify the JWT token settings here.
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': True,
+#  and many more settings we can see in the documentation.}
